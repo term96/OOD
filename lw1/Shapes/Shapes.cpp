@@ -18,11 +18,18 @@ int main()
 	}
 
 	std::ofstream outputFile("output.txt", std::ios::out);
+	if (!outputFile.is_open())
+	{
+		std::cout << "Failed to create output.txt\n";
+		return 1;
+	}
+
 	std::string inputLine;
 	IShape * shape = nullptr;
 	IShapeParser * triangleParser = new CTriangleParser();
 	IShapeParser * circleParser = new CCircleParser();
 	IShapeParser * rectangleParser = new CRectangleParser();
+	outputFile << std::fixed;
 
 	while (std::getline(inputFile, inputLine))
 	{
