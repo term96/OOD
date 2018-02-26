@@ -3,13 +3,13 @@
 
 int main()
 {
-	CBigInteger fi(1ll);
-	CBigInteger se(2ll);
-	//std::cout << fi.toString() << ' ' << se.toString() << '\n';
+	CBigInteger fi(-1ll);
+	CBigInteger se(-2ll);
+	CBigInteger th = fi + se;
 
-	CBigInteger sum = fi + se;
-	std::cout << "asdasdsa\n";
-	std::cout << sum.toString() << ' ' << sum.getCapacity() << '\n';
+	std::cout << fi.toString() << '\n';
+	std::cout << se.toString() << '\n';
+	std::cout << th.toString() << '\n';
 
     return 0;
 }
