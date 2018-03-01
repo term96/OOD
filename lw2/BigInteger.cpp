@@ -47,10 +47,14 @@ CBigInteger CBigInteger::getNegative(CBigInteger const & bigInteger)
 
 std::string CBigInteger::toString() const
 {
+	if (m_digits.size() == 1 && m_digits.front() == 0)
+	{
+		return "0";
+	}
 	std::stringstream stream;
 	for (char digit : m_digits)
 	{
-		stream << (short)digit;
+		stream << (short) digit;
 	}
 	return m_positive ? stream.str() : '-' + stream.str();
 }
@@ -70,40 +74,25 @@ CBigInteger CBigInteger::operator+(CBigInteger const & operand) const
 		return std::move(operand - getPositive(*this));
 	}
 
-	int maxSize = m_digits.size() > operand.m_digits.size() ? m_digits.size() : operand.m_digits.size();
-	std::vector<char> newDigits(maxSize);
-
-	long long currentLeft = m_digits.size() - 1;
-	long long currentRight = operand.m_digits.size() - 1;
-	char leftDigit;
-	char rightDigit;
-	char sum;
-	char remaining = 0;
-
-	for (int i = maxSize - 1; i >= 0; i--)
-	{
-		leftDigit = currentLeft >= 0 ? m_digits[(size_t) currentLeft] : 0;
-		rightDigit = currentRight >= 0 ? operand.m_digits[(size_t) currentRight] : 0;
-		sum = leftDigit + rightDigit + remaining;
-
-		newDigits[i] = sum % 10;
-		remaining = sum / 10;
-
-		currentLeft--;
-		currentRight--;
-	}
-
-	if (remaining != 0)
-	{
-		newDigits.insert(newDigits.begin(), remaining);
-	}
-
-	return std::move(CBigInteger(std::move(newDigits), true));
+	return add(*this, operand);
 }
 
 CBigInteger CBigInteger::operator-(CBigInteger const & operand) const
 {
-	return std::move(CBigInteger());
+	if (!m_positive && operand.m_positive)
+	{
+		return getNegative(getPositive(*this) + operand);
+	}
+	if (m_positive && !operand.m_positive)
+	{
+		return *this + getPositive(operand);
+	}
+	if (!m_positive && !operand.m_positive)
+	{
+		return getPositive(operand) - getPositive(*this);
+	}
+
+	return *this > operand ? sub(*this, operand) : getNegative(sub(operand, *this));
 }
 
 bool CBigInteger::operator==(CBigInteger const & operand) const
@@ -127,6 +116,10 @@ bool CBigInteger::operator<(CBigInteger const & operand) const
 	if (m_digits.size() < operand.m_digits.size())
 	{
 		return true;
+	}
+	else if (m_digits.size() > operand.m_digits.size())
+	{
+		return false;
 	}
 	for (size_t i = 0; i < m_digits.size(); i++)
 	{
@@ -169,3 +162,67 @@ void CBigInteger::trim(std::vector<char> & digits)
 	}
 	digits.erase(digits.begin(), digits.begin() + zeros);
 }
+
+CBigInteger CBigInteger::add(CBigInteger const & left, CBigInteger const & right)
+{
+	int maxSize = left.m_digits.size() > right.m_digits.size() ? left.m_digits.size() : right.m_digits.size();
+	std::vector<char> newDigits(maxSize);
+
+	int currentLeft = left.m_digits.size() - 1;
+	int currentRight = right.m_digits.size() - 1;
+	char leftDigit;
+	char rightDigit;
+	char sum;
+	char remaining = 0;
+
+	for (int i = maxSize - 1; i >= 0; i--)
+	{
+		leftDigit = currentLeft >= 0 ? left.m_digits[currentLeft] : 0;
+		rightDigit = currentRight >= 0 ? right.m_digits[currentRight] : 0;
+		sum = leftDigit + rightDigit + remaining;
+
+		newDigits[i] = sum % 10;
+		remaining = sum / 10;
+
+		currentLeft--;
+		currentRight--;
+	}
+
+	if (remaining != 0)
+	{
+		newDigits.insert(newDigits.begin(), remaining);
+	}
+
+	return std::move(CBigInteger(std::move(newDigits), true));
+}
+
+CBigInteger CBigInteger::sub(CBigInteger const & left, CBigInteger const & right)
+{
+	std::vector<char> newDigits(left.m_digits);
+	int currentRight = right.m_digits.size() - 1;
+
+	char leftDigit;
+	char rightDigit;
+
+	for (int i = newDigits.size() - 1; i >= 0; i--)
+	{
+		leftDigit = newDigits[i];
+		rightDigit = currentRight >= 0 ? right.m_digits[currentRight] : 0;
+
+		if (leftDigit >= rightDigit)
+		{
+			newDigits[i] = leftDigit - rightDigit;
+		}
+		else
+		{
+			newDigits[i] = 10 + leftDigit - rightDigit;
+			newDigits[i - 1]--;
+		}
+
+		currentRight--;
+	}
+
+	trim(newDigits);
+	return std::move(CBigInteger(std::move(newDigits), true));
+}
+

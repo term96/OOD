@@ -19,11 +19,12 @@ public:
 	bool operator<(CBigInteger const & operand) const;
 	bool operator>(CBigInteger const & operand) const;
 
-protected:
+private:
 	CBigInteger(std::vector<char> && digits, bool positive);
 	static void trim(std::vector<char> & digits);
+	static CBigInteger add(CBigInteger const & left, CBigInteger const & right);
+	static CBigInteger sub(CBigInteger const & left, CBigInteger const & right);
 
-private:
 	std::vector<char> m_digits;
 	bool m_positive;
 };
