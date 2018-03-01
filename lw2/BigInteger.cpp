@@ -2,14 +2,9 @@
 #include "BigInteger.h"
 
 CBigInteger::CBigInteger()
+	: m_digits({ 0 })
+	, m_positive(true)
 {
-	m_capacity = 19;
-	m_positive = true;
-	m_digits = new char[m_capacity];
-	for (int i = 0; i < m_capacity; i++)
-	{
-		m_digits[i] = 0;
-	}
 }
 
 CBigInteger::CBigInteger(long long value)
@@ -22,43 +17,18 @@ CBigInteger::CBigInteger(long long value)
 }
 
 CBigInteger::CBigInteger(unsigned long long value)
-	: CBigInteger()
+	: m_digits(19, 0)
+	, m_positive(true)
 {
 	unsigned long long remaining = value;
-	int currentDigit = m_capacity - 1;
+	size_t currentDigit = m_digits.size() - 1;
 	while (remaining > 0)
 	{
 		m_digits[currentDigit] = remaining % 10;
 		remaining /= 10;
 		currentDigit--;
 	}
-}
-
-CBigInteger::CBigInteger(CBigInteger const & bigInteger)
-{
-	m_capacity = bigInteger.m_capacity;
-	m_positive = bigInteger.m_positive;
-	m_digits = new char[m_capacity];
-	for (int i = 0; i < m_capacity; i++)
-	{
-		m_digits[i] = bigInteger.m_digits[i];
-	}
-}
-
-CBigInteger::CBigInteger(CBigInteger && bigInteger)
-{
-	m_capacity = bigInteger.m_capacity;
-	m_positive = bigInteger.m_positive;
-	m_digits = bigInteger.m_digits;
-	bigInteger.m_digits = nullptr;
-}
-
-CBigInteger::~CBigInteger()
-{
-	if (m_digits != nullptr)
-	{
-		delete[] m_digits;
-	}
+	trim(m_digits);
 }
 
 CBigInteger CBigInteger::getPositive(CBigInteger const & bigInteger)
@@ -75,67 +45,45 @@ CBigInteger CBigInteger::getNegative(CBigInteger const & bigInteger)
 	return std::move(copy);
 }
 
-int CBigInteger::getCapacity() const
-{
-	return m_capacity;
-}
-
-bool CBigInteger::isPositive() const
-{
-	return m_positive;
-}
-
 std::string CBigInteger::toString() const
 {
 	std::stringstream stream;
-	int currentDigit = 0;
-	while (currentDigit < m_capacity && m_digits[currentDigit] == 0)
+	for (char digit : m_digits)
 	{
-		currentDigit++;
+		stream << (short)digit;
 	}
-	while (currentDigit < m_capacity)
-	{
-		stream << (short) m_digits[currentDigit];
-		currentDigit++;
-	}
-	std::string value = stream.str();
-	if (value.empty())
-	{
-		return "0";
-	}
-	return m_positive ? value : '-' + value;
+	return m_positive ? stream.str() : '-' + stream.str();
 }
 
 CBigInteger CBigInteger::operator+(CBigInteger const & operand) const
 {
-	if (!isPositive() && !operand.isPositive())
+	if (!m_positive && !operand.m_positive)
 	{
 		return std::move(getNegative(getPositive(*this) + getPositive(operand)));
 	}
-	if (isPositive() && !operand.isPositive())
+	if (m_positive && !operand.m_positive)
 	{
 		return std::move(*this - getPositive(operand));
 	}
-	if (!isPositive() && operand.isPositive())
+	if (!m_positive && operand.m_positive)
 	{
 		return std::move(operand - getPositive(*this));
 	}
 
-	int maxCapacity = m_capacity > operand.m_capacity ? m_capacity : operand.m_capacity;
-	int newCapacity = maxCapacity + 1;
-	char * newDigits = new char[newCapacity];
+	int maxSize = m_digits.size() > operand.m_digits.size() ? m_digits.size() : operand.m_digits.size();
+	std::vector<char> newDigits(maxSize);
 
-	int currentLeft = m_capacity - 1;
-	int currentRight = operand.m_capacity - 1;
-	int leftDigit;
-	int rightDigit;
-	int sum;
-	int remaining = 0;
+	long long currentLeft = m_digits.size() - 1;
+	long long currentRight = operand.m_digits.size() - 1;
+	char leftDigit;
+	char rightDigit;
+	char sum;
+	char remaining = 0;
 
-	for (int i = newCapacity - 1; i >= 0; i--)
+	for (int i = maxSize - 1; i >= 0; i--)
 	{
-		leftDigit = currentLeft >= 0 ? m_digits[currentLeft] : 0;
-		rightDigit = currentRight >= 0 ? operand.m_digits[currentRight] : 0;
+		leftDigit = currentLeft >= 0 ? m_digits[(size_t) currentLeft] : 0;
+		rightDigit = currentRight >= 0 ? operand.m_digits[(size_t) currentRight] : 0;
 		sum = leftDigit + rightDigit + remaining;
 
 		newDigits[i] = sum % 10;
@@ -145,7 +93,12 @@ CBigInteger CBigInteger::operator+(CBigInteger const & operand) const
 		currentRight--;
 	}
 
-	return std::move(CBigInteger(newDigits, newCapacity, true));
+	if (remaining != 0)
+	{
+		newDigits.insert(newDigits.begin(), remaining);
+	}
+
+	return std::move(CBigInteger(std::move(newDigits), true));
 }
 
 CBigInteger CBigInteger::operator-(CBigInteger const & operand) const
@@ -155,61 +108,37 @@ CBigInteger CBigInteger::operator-(CBigInteger const & operand) const
 
 bool CBigInteger::operator==(CBigInteger const & operand) const
 {
-	int currentLeft = 0;
-	int currentRight = 0;
-	while (currentLeft < m_capacity && m_digits[currentLeft] == 0)
-	{
-		currentLeft++;
-	}
-	while (currentRight < operand.m_capacity && operand.m_digits[currentRight] == 0)
-	{
-		currentRight++;
-	}
-	if (m_capacity - currentLeft != operand.m_capacity - currentRight)
+	if (m_digits.size() != operand.m_digits.size())
 	{
 		return false;
 	}
-
-	while (currentLeft < m_capacity && currentRight < operand.m_capacity)
+	for (size_t i = 0; i < m_digits.size(); i++)
 	{
-		if (m_digits[currentLeft] != operand.m_digits[currentRight])
+		if (m_digits[i] != operand.m_digits[i])
 		{
 			return false;
 		}
-		currentLeft++;
-		currentRight++;
 	}
-
 	return true;
 }
 
 bool CBigInteger::operator<(CBigInteger const & operand) const
 {
-	int currentLeft = 0;
-	int currentRight = 0;
-	while (currentLeft < m_capacity && m_digits[currentLeft] == 0)
+	if (m_digits.size() < operand.m_digits.size())
 	{
-		currentLeft++;
+		return true;
 	}
-	while (currentRight < operand.m_capacity && operand.m_digits[currentRight] == 0)
+	for (size_t i = 0; i < m_digits.size(); i++)
 	{
-		currentRight++;
-	}
-	if (m_capacity - currentLeft != operand.m_capacity - currentRight)
-	{
-		return m_capacity - currentLeft < operand.m_capacity - currentRight;
-	}
-
-	while (currentLeft < m_capacity && currentRight < operand.m_capacity)
-	{
-		if (m_digits[currentLeft] != operand.m_digits[currentRight])
+		if (m_digits[i] < operand.m_digits[i])
 		{
-			return m_digits[currentLeft] < operand.m_digits[currentRight];
+			return true;
 		}
-		currentLeft++;
-		currentRight++;
+		else if (m_digits[i] > operand.m_digits[i])
+		{
+			return false;
+		}
 	}
-
 	return false;
 }
 
@@ -218,9 +147,25 @@ bool CBigInteger::operator>(CBigInteger const & operand) const
 	return !(*this == operand) && !(*this < operand);
 }
 
-CBigInteger::CBigInteger(char * digits, int capacity, bool positive)
+CBigInteger::CBigInteger(std::vector<char> && digits, bool positive)
+	: m_digits(digits)
+	, m_positive(positive)
 {
-	m_digits = digits;
-	m_capacity = capacity;
-	m_positive = positive;
+}
+
+void CBigInteger::trim(std::vector<char> & digits)
+{
+	size_t zeros = 0;
+	for (size_t i = 0; i < digits.size() - 1; i++)
+	{
+		if (digits[i] == 0)
+		{
+			zeros++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	digits.erase(digits.begin(), digits.begin() + zeros);
 }
