@@ -14,6 +14,7 @@ public:
 
 	CBigInteger operator+(CBigInteger const & operand) const;
 	CBigInteger operator-(CBigInteger const & operand) const;
+	CBigInteger operator*(CBigInteger const & operand) const;
 
 	bool operator==(CBigInteger const & operand) const;
 	bool operator<(CBigInteger const & operand) const;
@@ -24,6 +25,7 @@ private:
 	static void trim(std::vector<char> & digits);
 	static CBigInteger add(CBigInteger const & left, CBigInteger const & right);
 	static CBigInteger sub(CBigInteger const & left, CBigInteger const & right);
+	static CBigInteger mul(CBigInteger const & left, CBigInteger const & right);
 
 	std::vector<char> m_digits;
 	bool m_positive;

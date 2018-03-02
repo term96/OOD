@@ -95,6 +95,11 @@ CBigInteger CBigInteger::operator-(CBigInteger const & operand) const
 	return *this > operand ? sub(*this, operand) : getNegative(sub(operand, *this));
 }
 
+CBigInteger CBigInteger::operator*(CBigInteger const & operand) const
+{
+	return std::move(mul(*this, operand));
+}
+
 bool CBigInteger::operator==(CBigInteger const & operand) const
 {
 	if (m_digits.size() != operand.m_digits.size())
@@ -226,3 +231,27 @@ CBigInteger CBigInteger::sub(CBigInteger const & left, CBigInteger const & right
 	return std::move(CBigInteger(std::move(newDigits), true));
 }
 
+CBigInteger CBigInteger::mul(CBigInteger const & left, CBigInteger const & right)
+{
+	std::vector<char> newDigits(left.m_digits.size() + right.m_digits.size(), 0);
+
+	for (int i = right.m_digits.size() - 1; i >= 0; i--)
+	{
+		if (right.m_digits[i] == 0)
+		{
+			newDigits[i] = 0;
+			continue;
+		}
+		int carry = 0;
+		for (int j = left.m_digits.size() - 1; j >= 0; j--)
+		{
+			int mul = left.m_digits[j] * right.m_digits[i] + newDigits[i + j + 1] + carry;
+			newDigits[i + j + 1] = mul % 10;
+			carry = mul / 10;
+		}
+		newDigits[i] = carry;
+	}
+
+	trim(newDigits);
+	return CBigInteger(std::move(newDigits), left.m_positive == right.m_positive);
+}

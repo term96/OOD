@@ -17,17 +17,25 @@ void test()
 			{
 				right = CBigInteger((long long)j);
 
-				correct = std::to_string(i - j);
-				checked = (left - right).toString();
-				if (correct.compare(checked) != 0)
-				{
-					throw std::exception();
-				}
+				//correct = std::to_string(i - j);
+				//checked = (left - right).toString();
+				//if (correct.compare(checked) != 0)
+				//{
+				//	throw std::exception();
+				//}
 
-				correct = std::to_string(i + j);
-				checked = (left + right).toString();
+				//correct = std::to_string(i + j);
+				//checked = (left + right).toString();
+				//if (correct.compare(checked) != 0)
+				//{
+				//	throw std::exception();
+				//}
+
+				correct = std::to_string(i * j);
+				checked = (left * right).toString();
 				if (correct.compare(checked) != 0)
 				{
+					std::cout << correct << ' ' << checked << '\n';
 					throw std::exception();
 				}
 			}
