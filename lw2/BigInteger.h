@@ -5,7 +5,7 @@ class CBigInteger
 public:
 	CBigInteger();
 	CBigInteger(long long value);
-	CBigInteger(unsigned long long value);
+	CBigInteger(std::string value);
 
 	static CBigInteger getPositive(CBigInteger const & bigInteger);
 	static CBigInteger getNegative(CBigInteger const & bigInteger);

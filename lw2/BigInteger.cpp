@@ -8,25 +8,28 @@ CBigInteger::CBigInteger()
 }
 
 CBigInteger::CBigInteger(long long value)
-	: CBigInteger(static_cast<unsigned long long>(abs(value)))
-{
-	if (value < 0)
-	{
-		m_positive = false;
-	}
-}
-
-CBigInteger::CBigInteger(unsigned long long value)
 	: m_digits(19, 0)
-	, m_positive(true)
+	, m_positive(value >= 0)
 {
-	unsigned long long remaining = value;
+	long long remaining = abs(value);
 	size_t currentDigit = m_digits.size() - 1;
 	while (remaining > 0)
 	{
 		m_digits[currentDigit] = remaining % 10;
 		remaining /= 10;
 		currentDigit--;
+	}
+	trim(m_digits);
+}
+
+CBigInteger::CBigInteger(std::string value)
+	: m_digits(value.length())
+	, m_positive(value[0] != '-')
+{
+	m_digits[0] = value[0] == '-' ? 0 : value[0] - '0';
+	for (size_t i = 1; i < value.length(); i++)
+	{
+		m_digits[i] = value[i] - '0';
 	}
 	trim(m_digits);
 }
@@ -52,9 +55,9 @@ std::string CBigInteger::toString() const
 		return "0";
 	}
 	std::stringstream stream;
-	for (char digit : m_digits)
+	for (int digit : m_digits)
 	{
-		stream << (short) digit;
+		stream << (int) digit;
 	}
 	return m_positive ? stream.str() : '-' + stream.str();
 }
@@ -147,6 +150,10 @@ CBigInteger CBigInteger::operator*(CBigInteger const & operand) const
 
 CBigInteger CBigInteger::operator/(CBigInteger & operand) const
 {
+	if (operand.m_digits.size() == 1 && operand.m_digits.front() == 0)
+	{
+		throw std::logic_error("Division by zero");
+	}
 	if (getPositive(*this) < getPositive(operand))
 	{
 		return CBigInteger();
