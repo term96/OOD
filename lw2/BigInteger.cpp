@@ -61,51 +61,150 @@ std::string CBigInteger::toString() const
 
 CBigInteger CBigInteger::operator+(CBigInteger const & operand) const
 {
+	CBigInteger result;
 	if (!m_positive && !operand.m_positive)
 	{
-		return std::move(getNegative(getPositive(*this) + getPositive(operand)));
+		result = std::move(getNegative(getPositive(*this) + getPositive(operand)));
 	}
-	if (m_positive && !operand.m_positive)
+	else if (m_positive && !operand.m_positive)
 	{
-		return std::move(*this - getPositive(operand));
+		result = std::move(*this - getPositive(operand));
 	}
-	if (!m_positive && operand.m_positive)
+	else if (!m_positive && operand.m_positive)
 	{
-		return std::move(operand - getPositive(*this));
+		result = std::move(operand - getPositive(*this));
+	}
+	else
+	{
+		result = add(*this, operand);
 	}
 
-	return add(*this, operand);
+	if (result.m_digits.size() == 1 && result.m_digits.front() == 0)
+	{
+		result.m_positive = true;
+	}
+
+	return std::move(result);
 }
 
 CBigInteger CBigInteger::operator-(CBigInteger const & operand) const
 {
+	CBigInteger result;
 	if (!m_positive && operand.m_positive)
 	{
-		return getNegative(getPositive(*this) + operand);
+		result = getNegative(getPositive(*this) + operand);
 	}
-	if (m_positive && !operand.m_positive)
+	else if (m_positive && !operand.m_positive)
 	{
-		return *this + getPositive(operand);
+		result = *this + getPositive(operand);
 	}
-	if (!m_positive && !operand.m_positive)
+	else if (!m_positive && !operand.m_positive)
 	{
-		return getPositive(operand) - getPositive(*this);
+		result = getPositive(operand) - getPositive(*this);
+	}
+	else
+	{
+		result = operand < *this ? sub(*this, operand) : getNegative(sub(operand, *this));
 	}
 
-	return *this > operand ? sub(*this, operand) : getNegative(sub(operand, *this));
+	if (result.m_digits.size() == 1 && result.m_digits.front() == 0)
+	{
+		result.m_positive = true;
+	}
+
+	return std::move(result);
 }
 
 CBigInteger CBigInteger::operator*(CBigInteger const & operand) const
 {
-	return std::move(mul(*this, operand));
+	std::vector<char> newDigits(m_digits.size() + operand.m_digits.size(), 0);
+
+	for (int i = operand.m_digits.size() - 1; i >= 0; i--)
+	{
+		if (operand.m_digits[i] == 0)
+		{
+			newDigits[i] = 0;
+			continue;
+		}
+		int carry = 0;
+		for (int j = m_digits.size() - 1; j >= 0; j--)
+		{
+			int mul = m_digits[j] * operand.m_digits[i] + newDigits[i + j + 1] + carry;
+			newDigits[i + j + 1] = mul % 10;
+			carry = mul / 10;
+		}
+		newDigits[i] = carry;
+	}
+
+	trim(newDigits);
+	CBigInteger result(std::move(newDigits), m_positive == operand.m_positive);
+	if (newDigits.size() == 1 && newDigits.front() == 0)
+	{
+		result.m_positive = true;
+	}
+	return std::move(result);
+}
+
+CBigInteger CBigInteger::operator/(CBigInteger & operand) const
+{
+	if (getPositive(*this) < getPositive(operand))
+	{
+		return CBigInteger();
+	}
+
+	CBigInteger absOperand(std::vector<char>(operand.m_digits), true);
+	CBigInteger partOfLeft(std::vector<char>(m_digits.begin(), m_digits.begin() + operand.m_digits.size()), true);
+	CBigInteger result(std::vector<char>(), m_positive == operand.m_positive);
+	CBigInteger sumOfRight(absOperand);
+	size_t available = m_digits.size() - partOfLeft.m_digits.size();
+	
+	do
+	{
+		bool carry = false;
+		while (partOfLeft < absOperand && available > 0)
+		{
+			partOfLeft.m_digits.push_back(m_digits[m_digits.size() - available]);
+			result.m_digits.push_back(0);
+			available--;
+			carry = true;
+		}
+		if (carry)
+		{
+			result.m_digits.pop_back();
+			trim(partOfLeft.m_digits);
+		}
+
+		char count = 1;
+		while (sumOfRight < partOfLeft || sumOfRight == partOfLeft)
+		{
+			sumOfRight = sumOfRight + absOperand;
+			count++;
+		}
+		count--;
+
+		partOfLeft = partOfLeft;
+		partOfLeft = partOfLeft - sumOfRight + absOperand;
+		sumOfRight = absOperand;
+
+		result.m_digits.push_back(count);
+	} while (available > 0);
+
+	trim(result.m_digits);
+	if (result.m_digits.size() == 1 && result.m_digits.front() == 0)
+	{
+		result.m_positive = true;
+	}
+
+	return std::move(result);
 }
 
 bool CBigInteger::operator==(CBigInteger const & operand) const
 {
-	if (m_digits.size() != operand.m_digits.size())
+	if (m_positive != operand.m_positive || m_digits.size() != operand.m_digits.size())
 	{
 		return false;
 	}
+
 	for (size_t i = 0; i < m_digits.size(); i++)
 	{
 		if (m_digits[i] != operand.m_digits[i])
@@ -118,31 +217,24 @@ bool CBigInteger::operator==(CBigInteger const & operand) const
 
 bool CBigInteger::operator<(CBigInteger const & operand) const
 {
-	if (m_digits.size() < operand.m_digits.size())
-	{
-		return true;
-	}
-	else if (m_digits.size() > operand.m_digits.size())
+	if (*this == operand)
 	{
 		return false;
 	}
-	for (size_t i = 0; i < m_digits.size(); i++)
+	if (!m_positive && operand.m_positive)
 	{
-		if (m_digits[i] < operand.m_digits[i])
-		{
-			return true;
-		}
-		else if (m_digits[i] > operand.m_digits[i])
-		{
-			return false;
-		}
+		return true;
 	}
-	return false;
-}
+	if (m_positive && !operand.m_positive)
+	{
+		return false;
+	}
+	if (!m_positive && !operand.m_positive)
+	{
+		return !less(getPositive(*this), getPositive(operand));
+	}
 
-bool CBigInteger::operator>(CBigInteger const & operand) const
-{
-	return !(*this == operand) && !(*this < operand);
+	return less(*this, operand);
 }
 
 CBigInteger::CBigInteger(std::vector<char> && digits, bool positive)
@@ -231,27 +323,26 @@ CBigInteger CBigInteger::sub(CBigInteger const & left, CBigInteger const & right
 	return std::move(CBigInteger(std::move(newDigits), true));
 }
 
-CBigInteger CBigInteger::mul(CBigInteger const & left, CBigInteger const & right)
+bool CBigInteger::less(CBigInteger const & left, CBigInteger const & right)
 {
-	std::vector<char> newDigits(left.m_digits.size() + right.m_digits.size(), 0);
-
-	for (int i = right.m_digits.size() - 1; i >= 0; i--)
+	if (left.m_digits.size() < right.m_digits.size())
 	{
-		if (right.m_digits[i] == 0)
-		{
-			newDigits[i] = 0;
-			continue;
-		}
-		int carry = 0;
-		for (int j = left.m_digits.size() - 1; j >= 0; j--)
-		{
-			int mul = left.m_digits[j] * right.m_digits[i] + newDigits[i + j + 1] + carry;
-			newDigits[i + j + 1] = mul % 10;
-			carry = mul / 10;
-		}
-		newDigits[i] = carry;
+		return true;
 	}
-
-	trim(newDigits);
-	return CBigInteger(std::move(newDigits), left.m_positive == right.m_positive);
+	else if (left.m_digits.size() > right.m_digits.size())
+	{
+		return false;
+	}
+	for (size_t i = 0; i < left.m_digits.size(); i++)
+	{
+		if (left.m_digits[i] < right.m_digits[i])
+		{
+			return true;
+		}
+		else if (left.m_digits[i] > right.m_digits[i])
+		{
+			return false;
+		}
+	}
+	return false;
 }

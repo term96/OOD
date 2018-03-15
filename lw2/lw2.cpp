@@ -17,25 +17,40 @@ void test()
 			{
 				right = CBigInteger((long long)j);
 
-				//correct = std::to_string(i - j);
-				//checked = (left - right).toString();
-				//if (correct.compare(checked) != 0)
-				//{
-				//	throw std::exception();
-				//}
+				correct = std::to_string(i - j);
+				checked = (left - right).toString();
+				if (correct.compare(checked) != 0)
+				{
+					std::cout << '(' << i << " - " << j << ") failed, expected: " << correct << ", got: " << checked << '\n';
+					throw std::exception();
+				}
 
-				//correct = std::to_string(i + j);
-				//checked = (left + right).toString();
-				//if (correct.compare(checked) != 0)
-				//{
-				//	throw std::exception();
-				//}
+				correct = std::to_string(i + j);
+				checked = (left + right).toString();
+				if (correct.compare(checked) != 0)
+				{
+					std::cout << '(' << i << " + " << j << ") failed, expected: " << correct << ", got: " << checked << '\n';
+					throw std::exception();
+				}
 
 				correct = std::to_string(i * j);
 				checked = (left * right).toString();
 				if (correct.compare(checked) != 0)
 				{
-					std::cout << correct << ' ' << checked << '\n';
+					std::cout << '(' << i << " * " << j << ") failed, expected: " << correct << ", got: " << checked << '\n';
+					throw std::exception();
+				}
+
+				if (j == 0)
+				{
+					continue;
+				}
+					 
+				correct = std::to_string(i / j);
+				checked = (left / right).toString();
+				if (correct.compare(checked) != 0)
+				{
+					std::cout << '(' << i << " / " << j << ") failed, expected: " << correct << ", got: " << checked << '\n';
 					throw std::exception();
 				}
 			}
@@ -50,5 +65,6 @@ void test()
 int main()
 {
 	test();
+	std::cout << "Success\n";
     return 0;
 }
