@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "CircleParser.h"
 
+CCircleParser & CCircleParser::getInstance()
+{
+	static CCircleParser instance;
+	return instance;
+}
+
 IShape * CCircleParser::parseShape(std::string const & inputLine) const
 {
 	std::smatch match;

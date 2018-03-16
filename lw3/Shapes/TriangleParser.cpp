@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "TriangleParser.h"
 
+CTriangleParser & CTriangleParser::getInstance()
+{
+	static CTriangleParser instance;
+	return instance;
+}
+
 IShape * CTriangleParser::parseShape(std::string const & inputLine) const
 {
 	std::smatch match;

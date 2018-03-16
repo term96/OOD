@@ -26,16 +26,16 @@ int main()
 
 	std::string inputLine;
 	IShape * shape = nullptr;
-	IShapeParser * triangleParser = new CTriangleParser();
-	IShapeParser * circleParser = new CCircleParser();
-	IShapeParser * rectangleParser = new CRectangleParser();
+	IShapeParser & triangleParser = CTriangleParser::getInstance();
+	IShapeParser & circleParser = CCircleParser::getInstance();
+	IShapeParser & rectangleParser = CRectangleParser::getInstance();
 	outputFile << std::fixed;
 
 	while (std::getline(inputFile, inputLine))
 	{
-		if (inputLine.find(CTriangle::SHAPE_TYPE) != std::string::npos) { shape = triangleParser->parseShape(inputLine); }
-		else if (inputLine.find(CCircle::SHAPE_TYPE) != std::string::npos) { shape = circleParser->parseShape(inputLine); }
-		else if (inputLine.find(CRectangle::SHAPE_TYPE) != std::string::npos) { shape = rectangleParser->parseShape(inputLine); }
+		if (inputLine.find(CTriangle::SHAPE_TYPE) != std::string::npos) { shape = triangleParser.parseShape(inputLine); }
+		else if (inputLine.find(CCircle::SHAPE_TYPE) != std::string::npos) { shape = circleParser.parseShape(inputLine); }
+		else if (inputLine.find(CRectangle::SHAPE_TYPE) != std::string::npos) { shape = rectangleParser.parseShape(inputLine); }
 
 		if (shape != nullptr)
 		{
@@ -46,9 +46,6 @@ int main()
 	}
 
 	outputFile.close();
-	delete triangleParser;
-	delete circleParser;
-	delete rectangleParser;
 	return 0;
 }
 

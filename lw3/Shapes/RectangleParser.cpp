@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "RectangleParser.h"
 
+CRectangleParser & CRectangleParser::getInstance()
+{
+	static CRectangleParser instance;
+	return instance;
+}
+
 IShape * CRectangleParser::parseShape(std::string const & inputLine) const
 {
 	std::smatch match;
