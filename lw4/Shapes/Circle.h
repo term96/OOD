@@ -1,6 +1,7 @@
 #pragma once
 #include "IShape.h"
 #include "ShapePoint.h"
+#include "AdvancedBigInteger.h"
 
 class CCircle : public IShape
 {

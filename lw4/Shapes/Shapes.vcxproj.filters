@@ -25,6 +25,12 @@
     <Filter Include="Файлы исходного кода\ShapeParsers">
       <UniqueIdentifier>{6f660d4b-de3a-418b-b26f-20c742b23af8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Заголовочные файлы\BigInteger">
+      <UniqueIdentifier>{fd4a1147-9ae9-4e1a-b4f8-13127857efe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы исходного кода\BigInteger">
+      <UniqueIdentifier>{5eecd792-c7f0-455b-a025-e0ae8cf88d29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -63,6 +69,12 @@
     <ClInclude Include="RectangleParser.h">
       <Filter>Заголовочные файлы\ShapeParsers</Filter>
     </ClInclude>
+    <ClInclude Include="BigInteger.h">
+      <Filter>Заголовочные файлы\BigInteger</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedBigInteger.h">
+      <Filter>Заголовочные файлы\BigInteger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -91,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="RectangleParser.cpp">
       <Filter>Файлы исходного кода\ShapeParsers</Filter>
+    </ClCompile>
+    <ClCompile Include="BigInteger.cpp">
+      <Filter>Файлы исходного кода\BigInteger</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvancedBigInteger.cpp">
+      <Filter>Файлы исходного кода\BigInteger</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

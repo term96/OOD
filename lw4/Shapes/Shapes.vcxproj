@@ -138,6 +138,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdvancedBigInteger.h" />
+    <ClInclude Include="BigInteger.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="CircleParser.h" />
     <ClInclude Include="IShape.h" />
@@ -151,6 +153,8 @@
     <ClInclude Include="TriangleParser.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AdvancedBigInteger.cpp" />
+    <ClCompile Include="BigInteger.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="CircleParser.cpp" />
     <ClCompile Include="Rectangle.cpp" />
