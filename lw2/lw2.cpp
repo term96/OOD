@@ -40,7 +40,15 @@ int main()
 			result = leftBigInt * rightBigInt;
 			break;
 		case '/':
-			result = leftBigInt / rightBigInt;
+			try
+			{
+				result = leftBigInt / rightBigInt;
+			}
+			catch (std::logic_error e)
+			{
+				outputFile << e.what() << " (" << leftNumber << ' ' << operation << ' ' << rightNumber << ")\n";
+				continue;
+			}
 			break;
 		}
 		outputFile << leftNumber << ' ' << operation << ' ' << rightNumber << " = " << result.toString() << '\n';
