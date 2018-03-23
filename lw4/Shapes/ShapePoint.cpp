@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ShapePoint.h"
 
-CShapePoint::CShapePoint(int x, int y)
+CShapePoint::CShapePoint(CBigInteger x, CBigInteger y)
 	: m_x(x),
 	m_y(y)
 {
@@ -13,22 +13,22 @@ CShapePoint::CShapePoint(CShapePoint const & point)
 {
 }
 
-int CShapePoint::getX() const
+CBigInteger CShapePoint::getX() const
 {
 	return m_x;
 }
 
-int CShapePoint::getY() const
+CBigInteger CShapePoint::getY() const
 {
 	return m_y;
 }
 
-void CShapePoint::setX(int x)
+void CShapePoint::setX(CBigInteger x)
 {
 	m_x = x;
 }
 
-void CShapePoint::setY(int y)
+void CShapePoint::setY(CBigInteger y)
 {
 	m_y = y;
 }

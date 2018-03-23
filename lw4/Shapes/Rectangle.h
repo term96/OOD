@@ -7,8 +7,8 @@ class CRectangle : public IShape
 public:
 	CRectangle(CShapePoint const & point1, CShapePoint const & point2);
 
-	double getSquare() const override;
-	double getPerimeter() const override;
+	CBigInteger getSquare() const override;
+	CBigInteger getPerimeter() const override;
 	std::string getShapeType() const override;
 
 	static const std::string SHAPE_TYPE;

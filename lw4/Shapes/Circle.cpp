@@ -3,18 +3,18 @@
 
 const std::string CCircle::SHAPE_TYPE = "CIRCLE";
 
-CCircle::CCircle(CShapePoint const & center, int radius)
+CCircle::CCircle(CShapePoint const & center, CBigInteger radius)
 	: m_center(center),
 	m_radius(radius)
 {
 }
 
-double CCircle::getSquare() const
+CBigInteger CCircle::getSquare() const
 {
 	return M_PI * m_radius * m_radius;
 }
 
-double CCircle::getPerimeter() const
+CBigInteger CCircle::getPerimeter() const
 {
 	return 2 * M_PI * m_radius;
 }

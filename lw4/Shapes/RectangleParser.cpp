@@ -13,7 +13,7 @@ IShape * CRectangleParser::parseShape(std::string const & inputLine) const
 	std::regex regex("[0-9]+");
 	std::string matchSuffix = inputLine;
 
-	int coords[4];
+	CBigInteger coords[4];
 	int currentCoord = 0;
 
 	while (std::regex_search(matchSuffix, match, regex))
@@ -21,7 +21,7 @@ IShape * CRectangleParser::parseShape(std::string const & inputLine) const
 		int matchPosition = match.position(0);
 		if (matchSuffix[matchPosition - 1] != 'P')
 		{
-			coords[currentCoord] = std::stoi(match.str(0));
+			coords[currentCoord] = match.str(0);
 			currentCoord++;
 		}
 		matchSuffix = match.suffix().str();

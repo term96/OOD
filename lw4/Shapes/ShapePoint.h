@@ -1,18 +1,19 @@
 #pragma once
+#include "BigInteger.h"
 
 class CShapePoint
 {
 public:
-	CShapePoint(int x, int y);
+	CShapePoint(CBigInteger x, CBigInteger y);
 	CShapePoint(CShapePoint const & point);
 
-	int getX() const;
-	int getY() const;
+	CBigInteger getX() const;
+	CBigInteger getY() const;
 
-	void setX(int x);
-	void setY(int y);
+	void setX(CBigInteger x);
+	void setY(CBigInteger y);
 
 private:
-	int m_x;
-	int m_y;
+	CBigInteger m_x;
+	CBigInteger m_y;
 };

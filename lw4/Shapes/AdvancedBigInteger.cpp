@@ -17,10 +17,34 @@ CBigInteger operator*(CBigInteger const & left, double right)
 	size_t fractionalPartLength = fractionalWithoutPoint.length();
 	CBigInteger fractional(fractionalWithoutPoint);
 
-	return left * integer + left * fractional / CBigInteger(pow(10, fractionalPartLength));
+	return left * integer + left * fractional / CBigInteger(static_cast<long long>(pow(10, fractionalPartLength)));
 }
 
 CBigInteger operator*(double left, CBigInteger const & right)
 {
 	return right * left;
+}
+
+CAdvancedBigInteger::CAdvancedBigInteger(CBigInteger const & copy)
+	: CBigInteger(copy)
+{
+}
+
+CBigInteger CAdvancedBigInteger::sqrt(CBigInteger const & value)
+{
+	CBigInteger s, t;
+	CBigInteger two(2);
+
+	s = 1;  t = value;
+	while (s < t) {
+		s = s * two;
+		t = t / two;
+	}
+
+	do {
+		t = s;
+		s = (value / s + s) / two;//x1=(N / x0 + x0)/2 : recurrence formula
+	} while (s < t);
+
+	return t;
 }

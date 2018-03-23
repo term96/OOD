@@ -13,12 +13,12 @@ IShape * CCircleParser::parseShape(std::string const & inputLine) const
 	std::regex regex("[0-9]+");
 	std::string matchSuffix = inputLine;
 
-	int params[3];
+	CBigInteger params[3];
 	int currentParam = 0;
 
 	while (std::regex_search(matchSuffix, match, regex))
 	{
-		params[currentParam] = std::stoi(match.str(0));
+		params[currentParam] = match.str(0);
 		currentParam++;
 		matchSuffix = match.suffix().str();
 	}

@@ -39,7 +39,7 @@ int main()
 
 		if (shape != nullptr)
 		{
-			outputFile << shape->getShapeType() << ": P = " << shape->getPerimeter() << "; S = " << shape->getSquare() << '\n';
+			outputFile << shape->getShapeType() << ": P = " << shape->getPerimeter().toString() << "; S = " << shape->getSquare().toString() << '\n';
 			delete shape;
 			shape = nullptr;
 		}

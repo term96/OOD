@@ -1,20 +1,19 @@
 #pragma once
 #include "IShape.h"
 #include "ShapePoint.h"
-#include "AdvancedBigInteger.h"
 
 class CCircle : public IShape
 {
 public:
-	CCircle(CShapePoint const & center, int radius);
+	CCircle(CShapePoint const & center, CBigInteger radius);
 
-	double getSquare() const override;
-	double getPerimeter() const override;
+	CBigInteger getSquare() const override;
+	CBigInteger getPerimeter() const override;
 	std::string getShapeType() const override;
 
 	static const std::string SHAPE_TYPE;
 
 private:
 	CShapePoint m_center;
-	int m_radius;
+	CAdvancedBigInteger m_radius;
 };

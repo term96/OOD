@@ -9,17 +9,17 @@ CRectangle::CRectangle(CShapePoint const & point1, CShapePoint const & point2)
 {
 }
 
-double CRectangle::getSquare() const
+CBigInteger CRectangle::getSquare() const
 {
-	int width = abs(m_point1.getX() - m_point2.getX());
-	int height = abs(m_point1.getY() - m_point2.getY());
+	CBigInteger width = CBigInteger::getPositive(m_point1.getX() - m_point2.getX());
+	CBigInteger height = CBigInteger::getPositive(m_point1.getY() - m_point2.getY());
 	return width * height;
 }
 
-double CRectangle::getPerimeter() const
+CBigInteger CRectangle::getPerimeter() const
 {
-	int width = abs(m_point1.getX() - m_point2.getX());
-	int height = abs(m_point1.getY() - m_point2.getY());
+	CBigInteger width = CBigInteger::getPositive(m_point1.getX() - m_point2.getX());
+	CBigInteger height = CBigInteger::getPositive(m_point1.getY() - m_point2.getY());
 	return (width + height) * 2;
 }
 

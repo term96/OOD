@@ -20,7 +20,7 @@ public:
 	bool operator==(CBigInteger const & operand) const;
 	bool operator<(CBigInteger const & operand) const;
 
-private:
+protected:
 	CBigInteger(std::vector<char> && digits, bool positive);
 	static void trim(std::vector<char> & digits);
 	static CBigInteger add(CBigInteger const & left, CBigInteger const & right);
