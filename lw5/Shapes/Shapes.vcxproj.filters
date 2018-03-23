@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Файлы исходного кода">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Заголовочные файлы">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Shapes">
+      <UniqueIdentifier>{73589cad-2775-4a1d-9ddb-59e06634feb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы исходного кода\Shapes">
+      <UniqueIdentifier>{5a62c8e2-4d53-49b9-9a3b-e1d0db915fc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\ShapeParsers">
+      <UniqueIdentifier>{ab9ff99f-ba54-4bcb-b01a-50b2323acb8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы исходного кода\ShapeParsers">
+      <UniqueIdentifier>{6f660d4b-de3a-418b-b26f-20c742b23af8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\BigInteger">
+      <UniqueIdentifier>{fd4a1147-9ae9-4e1a-b4f8-13127857efe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы исходного кода\BigInteger">
+      <UniqueIdentifier>{5eecd792-c7f0-455b-a025-e0ae8cf88d29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Visitors">
+      <UniqueIdentifier>{e5a95613-37f4-4eba-bad2-46b3aebe659d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы исходного кода\Visitors">
+      <UniqueIdentifier>{2e1107b0-37b3-4d36-901f-5701f786bd31}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="IShape.h">
+      <Filter>Заголовочные файлы\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Заголовочные файлы\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="IShapeParser.h">
+      <Filter>Заголовочные файлы\ShapeParsers</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleParser.h">
+      <Filter>Заголовочные файлы\ShapeParsers</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
+      <Filter>Заголовочные файлы\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapePoint.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleParser.h">
+      <Filter>Заголовочные файлы\ShapeParsers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Заголовочные файлы\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleParser.h">
+      <Filter>Заголовочные файлы\ShapeParsers</Filter>
+    </ClInclude>
+    <ClInclude Include="BigInteger.h">
+      <Filter>Заголовочные файлы\BigInteger</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedBigInteger.h">
+      <Filter>Заголовочные файлы\BigInteger</Filter>
+    </ClInclude>
+    <ClInclude Include="IElement.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="IVisitor.h">
+      <Filter>Заголовочные файлы\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="PerimeterVisitor.h">
+      <Filter>Заголовочные файлы\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="SquareVisitor.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="Shapes.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>Файлы исходного кода\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleParser.cpp">
+      <Filter>Файлы исходного кода\ShapeParsers</Filter>
+    </ClCompile>
+    <ClCompile Include="Circle.cpp">
+      <Filter>Файлы исходного кода\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapePoint.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleParser.cpp">
+      <Filter>Файлы исходного кода\ShapeParsers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rectangle.cpp">
+      <Filter>Файлы исходного кода\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="RectangleParser.cpp">
+      <Filter>Файлы исходного кода\ShapeParsers</Filter>
+    </ClCompile>
+    <ClCompile Include="BigInteger.cpp">
+      <Filter>Файлы исходного кода\BigInteger</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvancedBigInteger.cpp">
+      <Filter>Файлы исходного кода\BigInteger</Filter>
+    </ClCompile>
+    <ClCompile Include="PerimeterVisitor.cpp">
+      <Filter>Файлы исходного кода\Visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="SquareVisitor.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
